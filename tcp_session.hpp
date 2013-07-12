@@ -3,12 +3,9 @@
 
 class TCPSession {
 	public:
-		TCPSession(int socket);
+		TCPSession(const int &socket, const int &buf_size=1024);
 		virtual ~TCPSession();
 		
-		int buf_size() const;
-		void buf_size(const int &val);
-
 		virtual bool start();
 
 		virtual void send(const char *buf, int buf_size);
