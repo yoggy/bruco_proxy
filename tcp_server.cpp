@@ -4,6 +4,10 @@ TCPServer::TCPServer() : listen_port_(12345), socket_(-1)
 {
 }
 
+TCPServer::~TCPServer()
+{
+}
+
 int TCPServer::listen_port() const
 {
 	return listen_port_;

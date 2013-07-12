@@ -5,6 +5,7 @@ class TCPServer
 {
 	public:
 		TCPServer();
+		virtual ~TCPServer();
 
 		int listen_port() const;
 		void listen_port(const int &val);	
