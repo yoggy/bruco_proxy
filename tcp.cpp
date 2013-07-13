@@ -89,6 +89,53 @@ int open_listen_socket(int port)
 	return ss;
 }
 
+
+int connect(const char *host, int port)
+{
+	int s;
+	int rv;
+	struct addrinfo hints;
+	struct addrinfo *res = NULL;
+	struct addrinfo *ai  = NULL;
+
+	memset(&hints, 0, sizeof(hints));
+	hints.ai_family   = AF_UNSPEC; // AF_UNSPEC, AF_INET, AF_INET6
+	hints.ai_socktype = SOCK_STREAM;
+
+	char port_str[16];
+	snprintf(port_str, 15, "%d", port);
+
+	rv = getaddrinfo(host, port_str, &hints, &res);
+	if (rv) {
+		log_e("getaddrinfo() failed...");
+		return -1;
+	}
+
+	// connect
+	s = -1;
+	for (ai = res; ai != NULL; ai = ai->ai_next) {
+		s = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
+
+		if (s < 0) continue;
+
+		rv = connect(s, ai->ai_addr, ai->ai_addrlen);
+		if (rv >= 0) {
+			break;
+		}
+		s = -1;
+	}
+
+	if (s < 0) {
+		log_e("connect() failed...");
+		freeaddrinfo(res);
+		return -1;
+	}
+
+	freeaddrinfo(res);
+
+	return s;
+}
+
 void set_tcp_nodelay(int socket)
 {
 	int flag;
@@ -108,11 +155,11 @@ std::string get_peer_name(const struct sockaddr_storage &sa, const int &sa_len)
 
 	getnameinfo(
 			(struct sockaddr *)&sa, sa_len,
-            addr_str,
+			addr_str,
 			NI_MAXHOST,
 			serv_str,
 			NI_MAXSERV,
-            NI_NUMERICHOST | NI_NUMERICSERV);
+			NI_NUMERICHOST | NI_NUMERICSERV);
 
 	std::stringstream ss;
 	ss << "addr=" << addr_str << ", port=" << serv_str;
