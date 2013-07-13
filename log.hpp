@@ -10,6 +10,8 @@ extern "C" {
 #define LOGGING_LEVEL_INFO  1
 #define LOGGING_LEVEL_DEBUG 0
 
+void set_output_log_level(const int level);
+
 void log_message_format_(const char *file, int line, const char *func, int level, const char *fmt, ...);
 
 #define log_e(...) {log_message_format_(__FILE__, __LINE__, __FUNCTION__, LOGGING_LEVEL_ERROR, __VA_ARGS__);}

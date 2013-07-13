@@ -5,6 +5,13 @@
 
 #include <time.h>
 
+int output_log_level_ = LOGGING_LEVEL_DEBUG;
+
+void set_output_log_level(const int level)
+{
+	output_log_level_ = level;
+}
+
 void log_message_output_(const char *time_str, const char *level_str, const char *msg)
 {
 	fprintf(stderr, "%s %s %s\n", time_str, level_str, msg);
@@ -13,6 +20,8 @@ void log_message_output_(const char *time_str, const char *level_str, const char
 
 void log_message_format_(const char *file, int line, const char *func, int level, const char *fmt, ...)
 {
+	if (level < output_log_level_) return;
+
 	char time_str[64];
 
 	time_t lt;
