@@ -20,7 +20,7 @@ void log_message_format_(const char *file, int line, const char *func, int level
 	lt = time(&lt);
 	localtime_r(&lt, &t);
 	snprintf(time_str, 64, "%04d/%02d/%02d %02d:%02d:%02d", 
-		t.tm_year, t.tm_mon, t.tm_mday, t.tm_hour, t.tm_min, t.tm_sec);
+		t.tm_year + 1900, t.tm_mon, t.tm_mday, t.tm_hour, t.tm_min, t.tm_sec);
 			
 	const char *level_str;
 	switch(level) {
