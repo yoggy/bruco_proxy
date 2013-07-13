@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 #include "log.hpp"
-#include "tcp_server.hpp"
+#include "bruco_server.hpp"
 
 void usage() 
 {
@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 		"rule_file=%s, listen_port=%d, forward_host=%s, forward_port=%d", 
 		rule_file.c_str(), listen_port, forward_host.c_str(), forward_port);
 
-	TCPServer server;
+	BrucoServer server;
 	server.listen_port(listen_port);
 
 	if (server.start() == false) {

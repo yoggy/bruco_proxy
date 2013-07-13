@@ -12,8 +12,8 @@ class TCPServer
 
 		bool is_start() const;
 
-		bool start();
-		void stop();
+		virtual bool start();
+		virtual void stop();
 
 		virtual void run();
 		virtual void on_accept(const int &socket, const std::string &peer_name);
