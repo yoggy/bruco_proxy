@@ -35,6 +35,7 @@ int main(int argc, char *argv[])
 	set_output_log_level(cf->get_int("output_log_level"));
 	set_output_string_length(cf->get_int("output_string_length"));
 
+	// server settings
 	int         listen_port  = cf->get_int("listen_port");
 	std::string forward_host = cf->get_string("forward_host");
 	int         forward_port = cf->get_int("forward_port");
@@ -42,8 +43,8 @@ int main(int argc, char *argv[])
 
 	std::cerr << "==== startup bruco_proxy ====" << std::endl;
 	log_d(
-		"config_file=%s, listen_port=%d, forward_host=%s, forward_port=%d", 
-		config_file.c_str(), listen_port, forward_host.c_str(), forward_port);
+		"config_file=%s, listen_port=%d, forward_host=%s, forward_port=%d, max_client=%d",
+		config_file.c_str(), listen_port, forward_host.c_str(), forward_port, max_client);
 
 	BrucoServer server;
 	server.listen_port(listen_port);

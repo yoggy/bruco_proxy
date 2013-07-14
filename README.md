@@ -4,6 +4,13 @@ under construction...
 
 require
 ================
+<pre>
+  $ wget http://re2.googlecode.com/files/re2-20130622.tgz
+  $ tar xvfz re2-20130622.tgz
+  $ cd re2
+  $ make
+  $ make install
+</pre>
 
 
 build
