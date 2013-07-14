@@ -11,6 +11,7 @@ extern "C" {
 #define LOGGING_LEVEL_DEBUG 0
 
 void set_output_log_level(const int level);
+void set_output_string_length(const int level);
 
 void log_message_format_(const char *file, int line, const char *func, int level, const char *fmt, ...);
 

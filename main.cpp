@@ -31,6 +31,10 @@ int main(int argc, char *argv[])
 
 	Config *cf = Config::getInstance();
 
+	// logging settings
+	set_output_log_level(cf->get_int("output_log_level"));
+	set_output_string_length(cf->get_int("output_string_length"));
+
 	int         listen_port  = cf->get_int("listen_port");
 	std::string forward_host = cf->get_string("forward_host");
 	int         forward_port = cf->get_int("forward_port");
