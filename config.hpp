@@ -12,7 +12,8 @@ class Config
 		virtual ~Config();
 
 	public:
-		int get_int(const std::string &key);
+		bool get_bool(const std::string &key);
+		int  get_int(const std::string &key);
 		std::string get_string(const std::string &key);
 
 	public:

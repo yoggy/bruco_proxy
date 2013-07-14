@@ -26,6 +26,13 @@ Config::~Config()
 {
 }
 
+bool Config::get_bool(const std::string &key)
+{
+	std::string val = get_string(key);
+	if (val == "true" || val == "TRUE" || val == "on" || val == "ON") return true;
+	return false;
+}
+
 int Config::get_int(const std::string &key)
 {
 	int val = atoi(get_string(key).c_str());
