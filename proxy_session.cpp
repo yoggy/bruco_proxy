@@ -1,14 +1,14 @@
-#include "bruco_session.hpp"
+#include "proxy_session.hpp"
 #include "log.hpp"
 #include "tcp.hpp"
 
-BrucoSession::BrucoSession(const int &socket, const std::string &peer_name, const int &buf_size) 
+ProxySession::ProxySession(const int &socket, const std::string &peer_name, const int &buf_size) 
 	: TCPSession(socket, peer_name, buf_size), proxy_socket_(-1), proxy_buf_size_(buf_size), break_flag_(false)
 {
 	proxy_buf_ = new char[proxy_buf_size_];
 }
 
-BrucoSession::~BrucoSession()
+ProxySession::~ProxySession()
 {
 	if (proxy_buf_ != NULL) {
 		delete proxy_buf_;
@@ -16,7 +16,7 @@ BrucoSession::~BrucoSession()
 	}
 }
 
-bool BrucoSession::start()
+bool ProxySession::start()
 {
 	proxy_socket_ = connect_tcp("::1", 80);
 	if (proxy_socket_ < 0) {
@@ -27,7 +27,7 @@ bool BrucoSession::start()
 	return TCPSession::start();
 }
 
-void BrucoSession::run()
+void ProxySession::run()
 {
 	fd_set fds;
 
@@ -70,7 +70,7 @@ void BrucoSession::run()
 	finish();
 }
 
-void BrucoSession::finish()
+void ProxySession::finish()
 {
 	if (proxy_socket_ >= 0) {
 		close(proxy_socket_);
@@ -80,7 +80,7 @@ void BrucoSession::finish()
 	TCPSession::finish();
 }
 
-void BrucoSession::on_recv(const char *buf, int buf_size)
+void ProxySession::on_recv(const char *buf, int buf_size)
 {
 	// log_d("on_recv() : size=%d, data=%s", buf_size, buf);
 
@@ -88,12 +88,12 @@ void BrucoSession::on_recv(const char *buf, int buf_size)
 	send_proxy(buf, buf_size);
 }
 
-int BrucoSession::send_proxy(const char *buf, int buf_size)
+int ProxySession::send_proxy(const char *buf, int buf_size)
 {
 	return ::send(proxy_socket_, buf, buf_size, 0);
 }
 
-void BrucoSession::on_recv_proxy(const char *buf, int buf_size)
+void ProxySession::on_recv_proxy(const char *buf, int buf_size)
 {
 	//log_d("on_recv_proxy() : size=%d, data=%s", buf_size, buf);
 
