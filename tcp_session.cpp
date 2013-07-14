@@ -60,11 +60,8 @@ void TCPSession::run()
 {
 	while(true) {
 		memset(buf_, 0, buf_size_);
-		size_t read_size = read(socket_, buf_, buf_size_);
-		if (read_size < 0) {
-			break;
-		}
-		else if (read_size == 0) {
+		int read_size = recv(socket_, buf_, buf_size_, 0);
+		if (read_size <= 0) {
 			break;
 		}
 		else {
