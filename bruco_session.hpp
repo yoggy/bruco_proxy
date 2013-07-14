@@ -3,6 +3,8 @@
 
 #include "tcp_session.hpp"
 
+class TCPServer;
+
 class BrucoSession : public TCPSession
 {
 	public:

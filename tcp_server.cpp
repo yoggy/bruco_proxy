@@ -3,7 +3,7 @@
 #include "tcp_server.hpp"
 #include "tcp_session.hpp"
 
-TCPServer::TCPServer() : listen_port_(12345), socket_(-1), break_flag_(false)
+TCPServer::TCPServer() : listen_port_(12345), socket_(-1), break_flag_(false), max_client_(1000)
 {
 }
 
@@ -20,6 +20,17 @@ int TCPServer::listen_port() const
 void TCPServer::listen_port(const int &val)
 {
 	listen_port_ = val;
+}
+
+
+int TCPServer::max_client() const
+{
+	return max_client_;
+}
+
+void TCPServer::max_client(const int &val)
+{
+	max_client_ = val;
 }
 
 bool TCPServer::is_start() const
@@ -65,7 +76,17 @@ void TCPServer::run() {
 		set_tcp_nodelay(cs);
 
 		if (cs > 0) {
-			on_accept(cs, get_peer_name(sa, sa_len));
+			if (max_client_ > TCPSession::get_count()) {
+				TCPSession::inc_count();
+				on_accept(cs, get_peer_name(sa, sa_len));
+			}
+			else {
+				log_w(
+					"REFUSE CLIENT CONNECTION! max_client=%d, peer=%s",
+					TCPSession::get_count(),
+					get_peer_name(sa, sa_len).c_str());
+				close(cs);
+			}
 		}
 	}
 }
@@ -75,3 +96,5 @@ void TCPServer::on_accept(const int &socket, const std::string &peer_name)
 	TCPSession *session = new TCPSession(socket, peer_name);
 	session->start();
 }
+
+

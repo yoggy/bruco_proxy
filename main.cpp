@@ -34,6 +34,7 @@ int main(int argc, char *argv[])
 
 	BrucoServer server;
 	server.listen_port(listen_port);
+	server.max_client(256);
 
 	if (server.start() == false) {
 		log_e("error: server.start() failed...");

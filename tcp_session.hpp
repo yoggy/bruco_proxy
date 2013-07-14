@@ -2,6 +2,7 @@
 #define __TCP_SESSION_HPP__
 
 #include <string>
+#include "lock.hpp"
 
 class TCPSession {
 	public:
@@ -16,6 +17,11 @@ class TCPSession {
 		virtual void on_recv(const char *buf, int buf_size);
 
 	protected:
+		static void inc_count();
+		static void dec_count();
+		static int get_count();
+
+	friend class TCPServer;
 
 	protected:
 		int socket_;
@@ -23,6 +29,9 @@ class TCPSession {
 		int buf_size_;
 		char *buf_;
 		pthread_t pt_;
+
+		static int count_;
+		static Mutex count_mutex_;
 };
 #endif // #define __TCP_SESSION_HPP__
 

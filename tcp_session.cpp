@@ -11,7 +11,11 @@
 #include <pthread.h>
 
 #include "log.hpp"
+#include "tcp_server.hpp"
 #include "tcp_session.hpp"
+
+int TCPSession::count_ = 0;
+Mutex TCPSession::count_mutex_;
 
 TCPSession::TCPSession(const int &socket, const std::string &peer_name, const int &buf_size)
 	: socket_(socket), peer_name_(peer_name), buf_size_(buf_size), pt_(0)
@@ -25,6 +29,8 @@ TCPSession::~TCPSession()
 		delete buf_;
 		buf_ = NULL;
 	}
+
+	dec_count();
 }
 
 void *pthread_entry_point_(void *data)
@@ -43,6 +49,7 @@ bool TCPSession::start()
 	rv = pthread_create(&pt_, NULL, pthread_entry_point_, this);
 	if (rv != 0) {
 		log_e("pthread_create() failed...");
+		finish();
 		return false;
 	}
 
@@ -55,7 +62,6 @@ void TCPSession::run()
 		memset(buf_, 0, buf_size_);
 		size_t read_size = read(socket_, buf_, buf_size_);
 		if (read_size < 0) {
-			log_e("read() error...%s", peer_name_.c_str());
 			break;
 		}
 		else if (read_size == 0) {
@@ -90,4 +96,22 @@ void TCPSession::on_recv(const char *buf, int buf_size)
 	// test code...
 	log_d("recv : size=%d, data=%s", buf_size, buf);
 	send(buf, buf_size);
+}
+
+void TCPSession::inc_count()
+{
+	ScopedLock lock(count_mutex_);
+	count_ ++;
+}
+
+void TCPSession::dec_count()
+{
+	ScopedLock lock(count_mutex_);
+	count_ --;
+}
+
+int TCPSession::get_count()
+{
+	ScopedLock lock(count_mutex_);
+	return count_;
 }
