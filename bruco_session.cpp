@@ -3,7 +3,7 @@
 #include "tcp.hpp"
 
 BrucoSession::BrucoSession(const int &socket, const std::string &peer_name, const int &buf_size) 
-	: TCPSession(socket, peer_name, buf_size), proxy_socket_(-1), proxy_buf_size_(buf_size)
+	: TCPSession(socket, peer_name, buf_size), proxy_socket_(-1), proxy_buf_size_(buf_size), break_flag_(false)
 {
 	proxy_buf_ = new char[proxy_buf_size_];
 }
@@ -36,13 +36,14 @@ void BrucoSession::run()
 	FD_SET(proxy_socket_, &fds);
 	int max_fd = std::max(socket_, proxy_socket_) + 1;
 
-	while(true) {
+	break_flag_ = false;
+	while(!break_flag_) {
 		fd_set work_fds = fds;
 		int rv = select(max_fd, &work_fds, NULL, NULL, NULL);
 		if (rv == 0) break; 
 	
 		// from client
-		if (FD_ISSET(socket_, &work_fds)) {
+		if (FD_ISSET(socket_, &work_fds) && break_flag_ == false) {
 			memset(buf_, 0, buf_size_);
 			int read_size = recv(socket_, buf_, buf_size_, 0);
 			if (read_size <= 0) {
@@ -54,7 +55,7 @@ void BrucoSession::run()
 		}
 
 		// from server
-		if (FD_ISSET(proxy_socket_, &work_fds)) {
+		if (FD_ISSET(proxy_socket_, &work_fds) && break_flag_ == false) {
 			memset(proxy_buf_, 0, proxy_buf_size_);
 			int read_size = recv(proxy_socket_, proxy_buf_, proxy_buf_size_, 0);
 			if (read_size <= 0) {
@@ -71,8 +72,6 @@ void BrucoSession::run()
 
 void BrucoSession::finish()
 {
-	log_d("BrucoSession::finish()");
-
 	if (proxy_socket_ >= 0) {
 		close(proxy_socket_);
 		proxy_socket_ = -1;
@@ -83,7 +82,8 @@ void BrucoSession::finish()
 
 void BrucoSession::on_recv(const char *buf, int buf_size)
 {
-	log_d("on_recv() : size=%d, data=%s", buf_size, buf);
+	// log_d("on_recv() : size=%d, data=%s", buf_size, buf);
+
 	// client -> proxy -> server
 	send_proxy(buf, buf_size);
 }
@@ -95,7 +95,8 @@ int BrucoSession::send_proxy(const char *buf, int buf_size)
 
 void BrucoSession::on_recv_proxy(const char *buf, int buf_size)
 {
-	log_d("on_recv_proxy() : size=%d, data=%s", buf_size, buf);
+	//log_d("on_recv_proxy() : size=%d, data=%s", buf_size, buf);
+
 	// server -> proxy -> client
 	send(buf, buf_size);
 }

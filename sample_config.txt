@@ -1,0 +1,17 @@
+# network config
+listen_port = 12345
+proxy_host  = ::1
+proxy_port  = 80
+
+max_client  = 100
+
+# hash key check in outbound connection
+outbound_key_check = false
+key_file = /tmp/key.txt
+
+# regular expression
+inbound_deny  = \x62\x62\x62\x62
+outbound_deny = \x62\x62\x62\x62
+
+# pass / deny
+default_rule = pass

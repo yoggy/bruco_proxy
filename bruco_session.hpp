@@ -24,6 +24,8 @@ class BrucoSession : public TCPSession
 		int proxy_socket_;
 		int proxy_buf_size_;
 		char *proxy_buf_;
+
+		bool break_flag_;
 };
 
 #endif // #define __BRUCO_SESSION_HPP__
