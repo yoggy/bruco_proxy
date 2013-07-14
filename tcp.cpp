@@ -90,7 +90,7 @@ int open_listen_socket(int port)
 }
 
 
-int connect(const char *host, int port)
+int connect_tcp(const char *host, int port)
 {
 	int s;
 	int rv;

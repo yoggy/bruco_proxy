@@ -15,7 +15,7 @@
 #include <string>
 
 int open_listen_socket(int port);
-int connect(const char *host, int port);
+int connect_tcp(const char *host, int port);
 void set_tcp_nodelay(int socket);
 std::string get_peer_name(const struct sockaddr_storage &sa, const int &sa_len);
 

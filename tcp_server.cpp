@@ -62,7 +62,6 @@ void TCPServer::run() {
 	break_flag_ = false;
 	while(!break_flag_) {
 		cs = accept(socket_, (struct sockaddr*) &sa, &sa_len);
-
 		set_tcp_nodelay(cs);
 
 		if (cs > 0) {
