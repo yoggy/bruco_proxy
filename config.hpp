@@ -20,14 +20,16 @@ class Config
 		static bool load(const std::string &filename);
 
 	private:
+		void set_key_value_(const std::string &l);
 		bool load_(const std::string &filename);
 
 	private:
 		std::map<std::string, std::string> map_;
+		Mutex map_mutex_;
 		
 	private:
 		static Config *singleton_;
-		static Mutex   mutex_;
+		static Mutex   singleton_mutex_;
 };
 
 
