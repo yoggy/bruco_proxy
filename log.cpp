@@ -47,7 +47,7 @@ void log_message_format_(const char *file, int line, const char *func, int level
 			break;
 	}
 
-	char msg[256];
+	char msg[1024];
 	va_list args;
 	va_start(args, fmt);
 	vsnprintf(msg, 1024, fmt, args);
