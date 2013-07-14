@@ -126,7 +126,7 @@ int connect_tcp(const char *host, int port)
 	}
 
 	if (s < 0) {
-		log_e("connect() failed...");
+		log_e("connect() failed...host=%s, port=%d", host, port);
 		freeaddrinfo(res);
 		return -1;
 	}

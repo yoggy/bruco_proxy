@@ -17,6 +17,9 @@ class BrucoSession : public TCPSession
 
 		virtual void on_recv(const char *buf, int buf_size);
 
+		int  send_proxy(const char *buf, int buf_size);
+		void on_recv_proxy(const char *buf, int buf_size);
+
 	protected:
 		int proxy_socket_;
 		int proxy_buf_size_;
