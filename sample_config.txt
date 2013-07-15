@@ -11,6 +11,9 @@ forward_port  = 80
 
 max_client  = 100
 
+# dump stream (true / false)
+dump_stream = false
+
 # hash key check in outbound connection (true / false)
 outbound_key_check = false
 key_file = /tmp/key.txt
