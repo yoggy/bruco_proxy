@@ -1,4 +1,5 @@
 #include "bruco_session.hpp"
+#include "log.hpp"
 
 BrucoSession::BrucoSession(std::string &proxy_host, const int &proxy_port, const int &socket, const std::string &peer_name, const int &buf_size)
 	: ProxySession(proxy_host, proxy_port, socket, peer_name, buf_size),
@@ -50,6 +51,7 @@ bool BrucoSession::start()
 
 void BrucoSession::on_recv(const char *buf, int buf_size)
 {
+	log_d("BrucoSession::on_recv()");
 	if (inbound_deny_re_ != NULL) {
 		std::string target_str(buf, buf_size);
 		bool rv = RE2::PartialMatch(target_str, *inbound_deny_re_);

@@ -20,6 +20,7 @@ ProxySession::~ProxySession()
 
 void ProxySession::break_session()
 {
+	log_w("break_session() from=%s", peer_name_.c_str());
 	break_flag_ = true;
 }
 

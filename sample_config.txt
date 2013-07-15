@@ -16,6 +16,8 @@ outbound_key_check = false
 key_file = /tmp/key.txt
 
 # regular expression
-inbound_deny  = \x62\x62\x62\x62
+#inbound_deny  = \x62\x62\x62\x62
+inbound_deny  = GET
 outbound_deny = \x62\x62\x62\x62
+#outbound_deny = works
 
