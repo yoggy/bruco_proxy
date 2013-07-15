@@ -76,3 +76,27 @@ bool split(const std::string &separator, const std::string &src, std::string &ke
 	return true;
 }
 
+std::string escape(const unsigned char c)
+{
+	char buf[5];
+	int n = c;
+	snprintf(buf, 5, "\\x%02x", n);
+	return std::string(buf);
+}
+
+std::string escape(const std::string &str)
+{
+	std::stringstream res;
+
+	for (int i = 0; i < str.size(); ++i) {
+		unsigned char c = str[i];
+		if (isprint(c)) {
+			res << str[i];
+		}
+		else {
+			res << escape(c);
+		}
+	}
+
+	return res.str();
+}

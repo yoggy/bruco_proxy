@@ -8,4 +8,6 @@ bool check_comment(const std::string &l);
 std::string strip(const std::string &str);
 bool split(const std::string &separator, const std::string &src, std::string &key, std::string &val);
 
+std::string escape(const std::string &str);
+
 #endif // #define ____STRING__HPP____
