@@ -50,10 +50,28 @@ bool BrucoSession::start()
 
 void BrucoSession::on_recv(const char *buf, int buf_size)
 {
+	if (inbound_deny_re_ != NULL) {
+		std::string target_str(buf, buf_size);
+		bool rv = RE2::PartialMatch(target_str, *inbound_deny_re_);
+		if (rv) {
+			break_session();
+			return;
+		}
+	}
+
 	ProxySession::on_recv(buf, buf_size);
 }
 
 void BrucoSession::on_recv_proxy(const char *buf, int buf_size)
 {
+	if (outbound_deny_re_ != NULL) {
+		std::string target_str(buf, buf_size);
+		bool rv = RE2::PartialMatch(target_str, *outbound_deny_re_);
+		if (rv) {
+			break_session();
+			return;
+		}
+	}
+
 	ProxySession::on_recv_proxy(buf, buf_size);
 }

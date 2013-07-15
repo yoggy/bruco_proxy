@@ -16,6 +16,11 @@ ProxySession::~ProxySession()
 	}
 }
 
+void ProxySession::break_session()
+{
+	break_flag_ = true;
+}
+
 bool ProxySession::start()
 {
 	proxy_socket_ = connect_tcp("::1", 80);
