@@ -16,6 +16,9 @@ BrucoServer::BrucoServer() : TCPServer(), cf_(NULL), inbound_deny_re_(NULL), out
 	if (re != "") {
 		outbound_deny_re_ = new RE2(re);
 	}
+
+	proxy_host_ = cf_->get_string("forward_host");
+	proxy_port_ = cf_->get_int("forward_port");
 }
 
 BrucoServer::~BrucoServer()
@@ -30,7 +33,7 @@ bool BrucoServer::start()
 
 void BrucoServer::on_accept(const int &socket, const std::string &peer_name)
 {
-	BrucoSession *session = new BrucoSession(socket, peer_name);
+	BrucoSession *session = new BrucoSession(proxy_host_, proxy_port_, socket, peer_name);
 
 	session->outbound_key_check(cf_->get_bool("outbound_key_check"));
 	session->key_file(cf_->get_string("key_file"));

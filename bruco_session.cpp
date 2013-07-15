@@ -1,7 +1,7 @@
 #include "bruco_session.hpp"
 
-BrucoSession::BrucoSession(const int &socket, const std::string &peer_name, const int &buf_size)
-	: ProxySession(socket, peer_name, buf_size),
+BrucoSession::BrucoSession(std::string &proxy_host, const int &proxy_port, const int &socket, const std::string &peer_name, const int &buf_size)
+	: ProxySession(proxy_host, proxy_port, socket, peer_name, buf_size),
 	outbound_key_check_(false), 
 	inbound_deny_re_(NULL), outbound_deny_re_(NULL)
 {

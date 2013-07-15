@@ -8,7 +8,7 @@ class TCPServer;
 class ProxySession : public TCPSession
 {
 	public:
-		ProxySession(const int &socket, const std::string &peer_name, const int &buf_size=1024);
+		ProxySession(std::string &proxy_host, const int &proxy_port, const int &socket, const std::string &peer_name, const int &buf_size=1024);
 		virtual ~ProxySession();
 
 		void break_session();
@@ -22,12 +22,12 @@ class ProxySession : public TCPSession
 		virtual int  send_proxy(const char *buf, int buf_size);
 		virtual void on_recv_proxy(const char *buf, int buf_size);
 
-
 	protected:
+		std::string proxy_host_;
+		int proxy_port_;
 		int proxy_socket_;
 		int proxy_buf_size_;
 		char *proxy_buf_;
-
 		bool break_flag_;
 };
 

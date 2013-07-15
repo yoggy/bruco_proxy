@@ -2,8 +2,10 @@
 #include "log.hpp"
 #include "tcp.hpp"
 
-ProxySession::ProxySession(const int &socket, const std::string &peer_name, const int &buf_size) 
-	: TCPSession(socket, peer_name, buf_size), proxy_socket_(-1), proxy_buf_size_(buf_size), break_flag_(false)
+ProxySession::ProxySession(std::string &proxy_host, const int &proxy_port, const int &socket, const std::string &peer_name, const int &buf_size) 
+	: TCPSession(socket, peer_name, buf_size),
+	proxy_host_(proxy_host), proxy_port_(proxy_port),
+	proxy_socket_(-1), proxy_buf_size_(buf_size), break_flag_(false)
 {
 	proxy_buf_ = new char[proxy_buf_size_];
 }
@@ -23,7 +25,7 @@ void ProxySession::break_session()
 
 bool ProxySession::start()
 {
-	proxy_socket_ = connect_tcp("::1", 80);
+	proxy_socket_ = connect_tcp(proxy_host_.c_str(), proxy_port_);
 	if (proxy_socket_ < 0) {
 		finish();
 		return false;

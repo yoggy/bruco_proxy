@@ -7,7 +7,7 @@
 class BrucoSession : public ProxySession
 {
 	public:
-		BrucoSession(const int &socket, const std::string &peer_name, const int &buf_size=1024);
+		BrucoSession(std::string &proxy_host, const int &proxy_port, const int &socket, const std::string &peer_name, const int &buf_size=1024);
 		virtual ~BrucoSession();
 
 		bool outbound_key_check() const;
