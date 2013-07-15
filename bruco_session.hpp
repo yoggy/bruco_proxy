@@ -1,6 +1,7 @@
 #ifndef __BRUCO_SESSION_HPP__
 #define __BRUCO_SESSION_HPP__
 
+#include <re2/re2.h>
 #include "proxy_session.hpp"
 
 class BrucoSession : public ProxySession
@@ -13,10 +14,8 @@ class BrucoSession : public ProxySession
 		void outbound_key_check(const bool &flag);
 		std::string key_file() const;
 		void key_file(const std::string &val);
-		std::string outbound_deny() const;
-		void outbound_deny(const std::string &val);
-		std::string inbound_deny() const;
-		void inbound_deny(const std::string &val);
+		void outbound_deny_re(RE2 *re);
+		void inbound_deny_re(RE2 *re);
 
 		virtual bool start();
 
@@ -26,8 +25,9 @@ class BrucoSession : public ProxySession
 	protected:
 		bool outbound_key_check_;
 		std::string key_file_;
-		std::string outbound_deny_;
-		std::string inbound_deny_;
+		RE2* inbound_deny_re_;
+		RE2* outbound_deny_re_;
+
 };
 
 #endif // #define __BRUCO_SESSION_HPP__

@@ -1,15 +1,16 @@
 #include "bruco_session.hpp"
 
-
 BrucoSession::BrucoSession(const int &socket, const std::string &peer_name, const int &buf_size)
-	: ProxySession(socket, peer_name, buf_size)
+	: ProxySession(socket, peer_name, buf_size),
+	outbound_key_check_(false), 
+	inbound_deny_re_(NULL), outbound_deny_re_(NULL)
 {
 
 }
 
 BrucoSession::~BrucoSession()
 {
-	
+
 }
 
 bool BrucoSession::outbound_key_check() const
@@ -32,24 +33,14 @@ void BrucoSession::key_file(const std::string &val)
 	key_file_ = val;
 }
 
-std::string BrucoSession::outbound_deny() const
+void BrucoSession::outbound_deny_re(RE2 *re)
 {
-	return outbound_deny_;
+	outbound_deny_re_ = re;
 }
 
-void BrucoSession::outbound_deny(const std::string &val)
+void BrucoSession::inbound_deny_re(RE2 *re)
 {
-	outbound_deny_ = val;
-}
-
-std::string BrucoSession::inbound_deny() const
-{
-	return inbound_deny_;
-}
-
-void BrucoSession::inbound_deny(const std::string &val)
-{
-	inbound_deny_ = val;
+	inbound_deny_re_ = re;
 }
 
 bool BrucoSession::start()

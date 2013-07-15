@@ -2,6 +2,7 @@
 #define __BRUCO_SERVER_HPP__
 
 #include <string>
+#include <re2/re2.h>
 
 #include "config.hpp"
 #include "tcp_server.hpp"
@@ -17,6 +18,9 @@ class BrucoServer : public TCPServer
 
 	private:
 		Config *cf_;
+
+		RE2 *inbound_deny_re_;
+		RE2 *outbound_deny_re_;
 };
 
 #endif // #define __BRUCO_SERVER_HPP__
