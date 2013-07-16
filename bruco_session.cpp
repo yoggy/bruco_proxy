@@ -138,7 +138,7 @@ bool BrucoSession::check_contain_key_(const std::string &key, const std::string 
 	if (key.size() == 0) return false;
 	if (src.size() == 0) return false;
 
-	RE2 re(RE2::QuoteMeta(key));
+	RE2 re(RE2::QuoteMeta(key), RE2::Latin1);
 
 	return RE2::PartialMatch(src, re);
 }
@@ -151,9 +151,7 @@ bool BrucoSession::check_contain_key_xor256_(const std::string &key, const std::
 	for (int n = 0; n < 256; ++n) {
 		std::string xor_str = xor8(key, (unsigned char)n);
 
-		log_e("xor_str8 : %s, %d, %s", key.c_str(), n, escape(xor_str).c_str());
-
-		RE2 re(RE2::QuoteMeta(xor_str));
+		RE2 re(RE2::QuoteMeta(xor_str), RE2::Latin1);
 		if (RE2::PartialMatch(src, re)) return true;
 	}
 
