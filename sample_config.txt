@@ -19,6 +19,9 @@ outbound_key_check        = false
 outbound_key_check_xor256 = true
 outbound_key_file         = ./key.txt
 
+# inbound jmpcall detect
+inbound_jmpcall_check = true
+
 # regular expression
 inbound_deny  = \x62\x62\x62\x62
 outbound_deny = \x62\x62\x62\x62

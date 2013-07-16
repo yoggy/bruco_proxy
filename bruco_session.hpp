@@ -14,6 +14,9 @@ class BrucoSession : public ProxySession
 		void outbound_key_check_xor256(const bool &flag);
 		void outbound_key_file(const std::string &val);
 		void outbound_deny_re(RE2 *re);
+
+		void inbound_jmpcall_check(const bool &flag);
+
 		void inbound_deny_re(RE2 *re);
 		void dump_stream(const bool &flag);
 
@@ -26,11 +29,15 @@ class BrucoSession : public ProxySession
 		std::string read_key_();
 		bool check_contain_key_(const std::string &key, const std::string &src);
 		bool check_contain_key_xor256_(const std::string &key, const std::string &src);
+		bool check_jmpcall_(const std::string &key);
 
 	protected:
 		bool outbound_key_check_;
 		bool outbound_key_check_xor256_;
 		std::string outbound_key_file_;
+
+		bool inbound_jmpcall_check_;
+
 		RE2* inbound_deny_re_;
 		RE2* outbound_deny_re_;
 		bool dump_stream_;

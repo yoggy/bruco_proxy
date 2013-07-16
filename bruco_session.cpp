@@ -9,6 +9,7 @@
 BrucoSession::BrucoSession(std::string &proxy_host, const int &proxy_port, const int &socket, const std::string &peer_name, const int &buf_size)
 	: ProxySession(proxy_host, proxy_port, socket, peer_name, buf_size),
 	outbound_key_check_(false), outbound_key_check_xor256_(false), 
+	inbound_jmpcall_check_(false), 
 	inbound_deny_re_(NULL), outbound_deny_re_(NULL),
 	dump_stream_(false)
 {
@@ -33,6 +34,11 @@ void BrucoSession::outbound_key_check_xor256(const bool &flag)
 void BrucoSession::outbound_key_file(const std::string &val)
 {
 	outbound_key_file_ = val;
+}
+
+void BrucoSession::inbound_jmpcall_check(const bool &flag)
+{
+	inbound_jmpcall_check_ = flag;
 }
 
 void BrucoSession::outbound_deny_re(RE2 *re)
@@ -63,10 +69,19 @@ void BrucoSession::on_recv(const char *buf, int buf_size)
 		log_d("dump_stream : %s [in_bound] %s", peer_name_.c_str(), escape(target_str).c_str());
 	}
 
+	if (inbound_jmpcall_check_) {
+		bool rv = check_jmpcall_(target_str);
+		if (rv) {
+			log_w("break_session : %s, type=inbound_jmpcall", peer_name_.c_str());
+			break_session();
+			return;
+		}
+	}
+
 	if (inbound_deny_re_ != NULL) {
 		bool rv = RE2::PartialMatch(target_str, *inbound_deny_re_);
 		if (rv) {
-			log_w("break_session : %s, inbound_re=%s", peer_name_.c_str(), inbound_deny_re_->pattern().c_str());
+			log_w("break_session : %s, type=inbound_deny_re, inbound_re=%s", peer_name_.c_str(), inbound_deny_re_->pattern().c_str());
 			break_session();
 			return;
 		}
@@ -157,3 +172,27 @@ bool BrucoSession::check_contain_key_xor256_(const std::string &key, const std::
 
 	return false;
 }
+
+bool BrucoSession::check_jmpcall_(const std::string &src)
+{
+	if (src.size() == 0) return false;
+
+	for (int p = 0; p < src.size(); ++p) {
+		// jmp check
+		if (src[p] == 0xef) { 
+			if (p + 1 >= src.size()) continue;
+			char jmpoffset = src[p+1];
+			
+			int callpos = p + jmpoffset + 2;
+			if (callpos < 0 || callpos >= src.size()) continue;
+			
+			// call check
+			if (src[callpos] == 0xe8) {
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
