@@ -9,7 +9,8 @@
 BrucoSession::BrucoSession(std::string &proxy_host, const int &proxy_port, const int &socket, const std::string &peer_name, const int &buf_size)
 	: ProxySession(proxy_host, proxy_port, socket, peer_name, buf_size),
 	outbound_key_check_(false), outbound_key_check_xor256_(false), 
-	inbound_deny_re_(NULL), outbound_deny_re_(NULL)
+	inbound_deny_re_(NULL), outbound_deny_re_(NULL),
+	dump_stream_(false)
 {
 
 }
@@ -44,6 +45,11 @@ void BrucoSession::inbound_deny_re(RE2 *re)
 	inbound_deny_re_ = re;
 }
 
+void BrucoSession::dump_stream(const bool &flag)
+{
+	dump_stream_ = flag;
+}
+
 bool BrucoSession::start()
 {
 	return ProxySession::start();
@@ -52,6 +58,10 @@ bool BrucoSession::start()
 void BrucoSession::on_recv(const char *buf, int buf_size)
 {
 	std::string target_str(buf, buf_size);
+
+	if (dump_stream_) {
+		log_d("dump_stream() [i] %s", escape(target_str).c_str());
+	}
 
 	if (inbound_deny_re_ != NULL) {
 		bool rv = RE2::PartialMatch(target_str, *inbound_deny_re_);
@@ -69,6 +79,9 @@ void BrucoSession::on_recv(const char *buf, int buf_size)
 void BrucoSession::on_recv_proxy(const char *buf, int buf_size)
 {
 	std::string target_str(buf, buf_size);
+	if (dump_stream_) {
+		log_d("dump_stream() [o] %s", escape(target_str).c_str());
+	}
 
 	if (outbound_deny_re_ != NULL) {
 		bool rv = RE2::PartialMatch(target_str, *outbound_deny_re_);
@@ -137,7 +150,9 @@ bool BrucoSession::check_contain_key_xor256_(const std::string &key, const std::
 
 	for (int n = 0; n < 256; ++n) {
 		std::string xor_str = xor8(key, (unsigned char)n);
-		log_e("xor_str8 : %s, %d, %s", key.c_str(), n, xor_str.c_str());
+
+		log_e("xor_str8 : %s, %d, %s", key.c_str(), n, escape(xor_str).c_str());
+
 		RE2 re(RE2::QuoteMeta(xor_str));
 		if (RE2::PartialMatch(src, re)) return true;
 	}

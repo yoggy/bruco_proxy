@@ -42,5 +42,7 @@ void BrucoServer::on_accept(const int &socket, const std::string &peer_name)
 	session->inbound_deny_re(inbound_deny_re_);
 	session->outbound_deny_re(outbound_deny_re_);
 
+	session->dump_stream(cf_->get_bool("dump_stream"));
+
 	session->start();
 }

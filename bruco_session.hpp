@@ -15,6 +15,7 @@ class BrucoSession : public ProxySession
 		void outbound_key_file(const std::string &val);
 		void outbound_deny_re(RE2 *re);
 		void inbound_deny_re(RE2 *re);
+		void dump_stream(const bool &flag);
 
 		virtual bool start();
 
@@ -32,6 +33,7 @@ class BrucoSession : public ProxySession
 		std::string outbound_key_file_;
 		RE2* inbound_deny_re_;
 		RE2* outbound_deny_re_;
+		bool dump_stream_;
 };
 
 #endif // #define __BRUCO_SESSION_HPP__
