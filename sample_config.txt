@@ -6,7 +6,7 @@ output_string_length = 1024
 
 # network config
 listen_port = 12345
-forward_host  = www.sabamiso.net
+forward_host  = ::1
 forward_port  = 80
 
 max_client  = 100

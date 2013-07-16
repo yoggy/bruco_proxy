@@ -21,3 +21,15 @@ $ cd bruco_proxy
 $ cmake .
 $ make
 </pre>
+
+run
+================
+<pre>
+$ ./bruco_proxy
+usage : ./bruco_proxy config_file
+
+    examples
+        $ ./bruco_proxy sample_config.txt
+
+$ ./bruco_proxy sample_config.txt
+
