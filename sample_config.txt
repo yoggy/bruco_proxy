@@ -16,11 +16,10 @@ dump_stream = true
 
 # hash key check in outbound connection (true / false)
 outbound_key_check = false
-key_file = /tmp/key.txt
+outbound_key_check_xor256 = false
+outbound_key_file  = /tmp/key.txt
 
 # regular expression
 #inbound_deny  = \x62\x62\x62\x62
-inbound_deny  = GET
-outbound_deny = \x62\x62\x62\x62
-#outbound_deny = works
+#outbound_deny = \x62\x62\x62\x62
 
