@@ -15,12 +15,12 @@ max_client  = 100
 dump_stream = true
 
 # hash key check in outbound connection (true / false)
-outbound_key_check        = false
-outbound_key_check_xor256 = true
+outbound_key_check        = true
+outbound_key_check_xor256 = false
 outbound_key_file         = ./key.txt
 
 # inbound jmpcall detect
-inbound_jmpcall_check = true
+inbound_jmpcall_check = false
 
 # regular expression
 inbound_deny  = \x62\x62\x62\x62
