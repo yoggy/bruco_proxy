@@ -60,13 +60,13 @@ void BrucoSession::on_recv(const char *buf, int buf_size)
 	std::string target_str(buf, buf_size);
 
 	if (dump_stream_) {
-		log_d("dump_stream() [i] %s", escape(target_str).c_str());
+		log_d("dump_stream : %s [in_bound] %s", peer_name_.c_str(), escape(target_str).c_str());
 	}
 
 	if (inbound_deny_re_ != NULL) {
 		bool rv = RE2::PartialMatch(target_str, *inbound_deny_re_);
 		if (rv) {
-			log_w("break_session() : %s, inbound_re=%s", peer_name_.c_str(), inbound_deny_re_->pattern().c_str());
+			log_w("break_session : %s, inbound_re=%s", peer_name_.c_str(), inbound_deny_re_->pattern().c_str());
 			break_session();
 			return;
 		}
@@ -80,13 +80,13 @@ void BrucoSession::on_recv_proxy(const char *buf, int buf_size)
 {
 	std::string target_str(buf, buf_size);
 	if (dump_stream_) {
-		log_d("dump_stream() [o] %s", escape(target_str).c_str());
+		log_d("dump_stream : %s [out_bound] %s", peer_name_.c_str(), escape(target_str).c_str());
 	}
 
 	if (outbound_deny_re_ != NULL) {
 		bool rv = RE2::PartialMatch(target_str, *outbound_deny_re_);
 		if (rv) {
-			log_w("break_session() : %s, type=outbound_deny_re, outbound_re=%s",
+			log_w("break_session : %s, type=outbound_deny_re, outbound_re=%s",
 				peer_name_.c_str(), outbound_deny_re_->pattern().c_str());
 			break_session();
 			return;
@@ -96,7 +96,7 @@ void BrucoSession::on_recv_proxy(const char *buf, int buf_size)
 	if (outbound_key_check_xor256_) {
 		std::string key = read_key_();
 		if (check_contain_key_xor256_(key, target_str)) {
-			log_w("break_session() : %s, type=outbound_contain_key_xor256, outbound_key_file=%s",
+			log_w("break_session : %s, type=outbound_contain_key_xor256, outbound_key_file=%s",
 				peer_name_.c_str(), outbound_key_file_.c_str());
 			break_session();
 			return;
@@ -105,7 +105,7 @@ void BrucoSession::on_recv_proxy(const char *buf, int buf_size)
 	else if (outbound_key_check_) {
 		std::string key = read_key_();
 		if (check_contain_key_(key, target_str)) {
-			log_w("break_session() : %s, type=outbound_contain_key, outbound_key_file=%s",
+			log_w("break_session : %s, type=outbound_contain_key, outbound_key_file=%s",
 				peer_name_.c_str(), outbound_key_file_.c_str());
 			break_session();
 			return;
