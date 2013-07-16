@@ -2,7 +2,7 @@ bruco_proxy
 ================
 under construction...
 
-require
+requirements
 ================
 <pre>
   $ wget http://re2.googlecode.com/files/re2-20130622.tgz
