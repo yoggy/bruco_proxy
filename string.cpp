@@ -88,7 +88,7 @@ std::string escape(const std::string &str)
 {
 	std::stringstream res;
 
-	for (int i = 0; i < str.size(); ++i) {
+	for (int i = 0; i < (int)str.size(); ++i) {
 		unsigned char c = str[i];
 		if (isprint(c)) {
 			res << str[i];
@@ -105,7 +105,7 @@ std::string xor8(const std::string &str, const unsigned char x)
 {
 	std::stringstream res;
 
-	for (int i = 0; i < str.size(); ++i) {
+	for (int i = 0; i < (int)str.size(); ++i) {
 		unsigned char c = str[i];
 		res << (unsigned char)((c ^ x) & 0xff);
 	}
