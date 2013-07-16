@@ -36,7 +36,8 @@ void BrucoServer::on_accept(const int &socket, const std::string &peer_name)
 	BrucoSession *session = new BrucoSession(proxy_host_, proxy_port_, socket, peer_name);
 
 	session->outbound_key_check(cf_->get_bool("outbound_key_check"));
-	session->key_file(cf_->get_string("key_file"));
+	session->outbound_key_check_xor256(cf_->get_bool("outbound_key_check_xor256"));
+	session->outbound_key_file(cf_->get_string("outbound_key_file"));
 
 	session->inbound_deny_re(inbound_deny_re_);
 	session->outbound_deny_re(outbound_deny_re_);

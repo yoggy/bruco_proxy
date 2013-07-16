@@ -9,5 +9,6 @@ std::string strip(const std::string &str);
 bool split(const std::string &separator, const std::string &src, std::string &key, std::string &val);
 
 std::string escape(const std::string &str);
+std::string xor8(const std::string &str, const unsigned char x);
 
 #endif // #define ____STRING__HPP____
