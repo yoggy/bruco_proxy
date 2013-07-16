@@ -9,12 +9,12 @@ BrucoServer::BrucoServer() : TCPServer(), cf_(NULL), inbound_deny_re_(NULL), out
 
 	re = cf_->get_string("inbound_deny");
 	if (re != "") {
-		inbound_deny_re_ = new RE2(re);
+		inbound_deny_re_ = new RE2(re, RE2::Latin1);
 	}
 
 	re = cf_->get_string("outbound_deny");
 	if (re != "") {
-		outbound_deny_re_ = new RE2(re);
+		outbound_deny_re_ = new RE2(re, RE2::Latin1);
 	}
 
 	proxy_host_ = cf_->get_string("forward_host");
