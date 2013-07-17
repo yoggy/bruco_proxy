@@ -50,7 +50,7 @@ output_string_length = 1024
 # network config
 listen_port = 12345
 forward_host  = ::1
-forward_port  =A23456 
+forward_port  = 23456 
 max_client  = 100
 
 # dump stream (true / false)
