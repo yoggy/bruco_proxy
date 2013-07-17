@@ -1,4 +1,5 @@
 #include "string.hpp"
+#include <stdio.h>
 #include <sstream>
 
 std::string chomp(const std::string &str)

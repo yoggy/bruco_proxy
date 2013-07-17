@@ -177,14 +177,14 @@ bool BrucoSession::check_jmpcall_(const std::string &src)
 {
 	if (src.size() == 0) return false;
 
-	for (int p = 0; p < src.size(); ++p) {
+	for (int p = 0; p < (int)src.size(); ++p) {
 		// jmp check
 		if (src[p] == 0xef) { 
-			if (p + 1 >= src.size()) continue;
+			if (p + 1 >= (int)src.size()) continue;
 			char jmpoffset = src[p+1];
 			
 			int callpos = p + jmpoffset + 2;
-			if (callpos < 0 || callpos >= src.size()) continue;
+			if (callpos < 0 || callpos >= (int)src.size()) continue;
 			
 			// call check
 			if (src[callpos] == 0xe8) {

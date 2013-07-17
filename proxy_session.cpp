@@ -5,7 +5,8 @@
 ProxySession::ProxySession(std::string &proxy_host, const int &proxy_port, const int &socket, const std::string &peer_name, const int &buf_size) 
 	: TCPSession(socket, peer_name, buf_size),
 	proxy_host_(proxy_host), proxy_port_(proxy_port),
-	proxy_socket_(-1), proxy_buf_size_(buf_size), break_flag_(false)
+	proxy_socket_(-1), proxy_buf_size_(buf_size), break_flag_(false),
+	inbound_count_(0), outbound_count_(0), inbound_total_bytes_(0), outbound_total_bytes_(0)
 {
 	proxy_buf_ = new char[proxy_buf_size_];
 }
@@ -93,6 +94,9 @@ void ProxySession::on_recv(const char *buf, int buf_size)
 
 	// client -> proxy -> server
 	send_proxy(buf, buf_size);
+
+	inbound_count_ ++;
+	inbound_total_bytes_ += buf_size;
 }
 
 int ProxySession::send_proxy(const char *buf, int buf_size)
@@ -106,5 +110,9 @@ void ProxySession::on_recv_proxy(const char *buf, int buf_size)
 
 	// server -> proxy -> client
 	send(buf, buf_size);
+
+
+	outbound_count_ ++;
+	outbound_total_bytes_ += buf_size;
 }
 

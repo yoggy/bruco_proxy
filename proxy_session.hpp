@@ -29,6 +29,11 @@ class ProxySession : public TCPSession
 		int proxy_buf_size_;
 		char *proxy_buf_;
 		bool break_flag_;
+
+		int inbound_count_;
+		int outbound_count_;
+		int inbound_total_bytes_;
+		int outbound_total_bytes_;
 };
 
 #endif // #define __PROXY_SESSION_HPP__
