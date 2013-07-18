@@ -54,11 +54,7 @@ forward_port  = 23456
 max_client  = 100
 
 # dump stream (true / false)
-dump_stream = true
-
-# key check in outbound (true / false)
-outbound_key_check        = true
-outbound_key_file         = ./test.txt
+dump_stream = false
 
 # regular expression check
 inbound_deny  = test\x61\x61\x61\x61
