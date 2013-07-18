@@ -41,8 +41,8 @@ int main(int argc, char *argv[])
 	int         forward_port = cf->get_int("forward_port");
 	int         max_client   = cf->get_int("max_client");
 
-	std::cerr << "==== startup bruco_proxy ====" << std::endl;
-	log_d(
+	log_i("==== startup bruco_proxy ====");
+	log_i(
 		"config_file=%s, listen_port=%d, forward_host=%s, forward_port=%d, max_client=%d",
 		config_file.c_str(), listen_port, forward_host.c_str(), forward_port, max_client);
 

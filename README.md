@@ -56,17 +56,13 @@ max_client  = 100
 # dump stream (true / false)
 dump_stream = true
 
-# key check in outbound connection (true / false)
+# key check in outbound (true / false)
 outbound_key_check        = true
-outbound_key_check_xor256 = false
-outbound_key_file         = ./key.txt
-
-# inbound jmpcall detect
-inbound_jmpcall_check = false
+outbound_key_file         = ./test.txt
 
 # regular expression check
-inbound_deny  = \x61\x61\x61\x61
-outbound_deny = \x62\x62\x62\x62
+inbound_deny  = test\x61\x61\x61\x61
+outbound_deny = test\x62\x62\x62\x62
 
 </pre>
 

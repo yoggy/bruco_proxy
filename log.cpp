@@ -20,7 +20,7 @@ void set_output_string_length(const int level)
 
 void log_message_output_(const char *time_str, const char *level_str, const char *msg)
 {
-	fprintf(stderr, "%s %s %s\n", time_str, level_str, msg);
+	fprintf(stdout, "%s %s %s\n", time_str, level_str, msg);
 	fflush(stderr);
 }
 
