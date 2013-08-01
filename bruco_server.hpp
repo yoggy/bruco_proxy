@@ -28,7 +28,9 @@ class BrucoServer : public TCPServer
 		std::string proxy_host_;
 		int proxy_port_;
 
+		RE2 *inbound_pass_re_;
 		RE2 *inbound_deny_re_;
+		RE2 *outbound_pass_re_;
 		RE2 *outbound_deny_re_;
 };
 

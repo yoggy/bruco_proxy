@@ -1,20 +1,33 @@
 #include "bruco_server.hpp"
 #include "bruco_session.hpp"
 
-BrucoServer::BrucoServer() : TCPServer(), cf_(NULL), inbound_deny_re_(NULL), outbound_deny_re_(NULL)
+BrucoServer::BrucoServer()
+	: TCPServer(), cf_(NULL),
+	inbound_pass_re_(NULL), inbound_deny_re_(NULL), 
+	outbound_pass_re_(NULL), outbound_deny_re_(NULL)
 {
 	cf_ = Config::getInstance();
 	
 	std::string re;
 
-	re = cf_->get_string("inbound_deny");
+	re = cf_->get_string("outbound_pass");
 	if (re != "") {
-		inbound_deny_re_ = new RE2(re, RE2::Latin1);
+		outbound_pass_re_ = new RE2(re, RE2::Latin1);
 	}
 
 	re = cf_->get_string("outbound_deny");
 	if (re != "") {
 		outbound_deny_re_ = new RE2(re, RE2::Latin1);
+	}
+
+	re = cf_->get_string("inbound_pass");
+	if (re != "") {
+		inbound_pass_re_ = new RE2(re, RE2::Latin1);
+	}
+
+	re = cf_->get_string("inbound_deny");
+	if (re != "") {
+		inbound_deny_re_ = new RE2(re, RE2::Latin1);
 	}
 
 	proxy_host_ = cf_->get_string("forward_host");
@@ -41,8 +54,12 @@ void BrucoServer::on_accept(const int &socket, const std::string &peer_name)
 
 	session->inbound_jmpcall_check(cf_->get_bool("inbound_jmpcall_check"));
 
+	session->inbound_pass_re(inbound_pass_re_);
 	session->inbound_deny_re(inbound_deny_re_);
+	session->inbound_default_pass(cf_->get_bool("inbound_default_pass"));
+	session->outbound_pass_re(outbound_pass_re_);
 	session->outbound_deny_re(outbound_deny_re_);
+	session->outbound_default_pass(cf_->get_bool("outbound_default_pass"));
 
 	session->dump_stream(cf_->get_bool("dump_stream"));
 

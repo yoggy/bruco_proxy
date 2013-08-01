@@ -13,11 +13,17 @@ class BrucoSession : public ProxySession
 		void outbound_key_check(const bool &flag);
 		void outbound_key_check_xor256(const bool &flag);
 		void outbound_key_file(const std::string &val);
+
+		void outbound_pass_re(RE2 *re);
 		void outbound_deny_re(RE2 *re);
+		void outbound_default_pass(const bool &flag);
+
+		void inbound_pass_re(RE2 *re);
+		void inbound_deny_re(RE2 *re);
+		void inbound_default_pass(const bool &flag);
 
 		void inbound_jmpcall_check(const bool &flag);
 
-		void inbound_deny_re(RE2 *re);
 		void dump_stream(const bool &flag);
 
 		virtual bool start();
@@ -38,8 +44,14 @@ class BrucoSession : public ProxySession
 
 		bool inbound_jmpcall_check_;
 
+		RE2* inbound_pass_re_;
 		RE2* inbound_deny_re_;
+		RE2* outbound_pass_re_;
 		RE2* outbound_deny_re_;
+
+		bool inbound_default_pass_;
+		bool outbound_default_pass_;
+
 		bool dump_stream_;
 };
 

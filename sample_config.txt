@@ -22,7 +22,14 @@ outbound_key_file         = ./key.txt
 # inbound jmpcall detect
 inbound_jmpcall_check = false
 
-# regular expression
+# regular expression (deny)
 inbound_deny  = \x62\x62\x62\x62
 outbound_deny = \x62\x62\x62\x62
 
+# regular expression (pass)
+#inbound_pass  = \x62\x62\x62\x62
+#outbound_pass = \x62\x62\x62\x62
+
+# default policy (true / false)
+inbound_default_pass  = true
+outbound_default_pass = true

@@ -10,7 +10,9 @@ BrucoSession::BrucoSession(std::string &proxy_host, const int &proxy_port, const
 	: ProxySession(proxy_host, proxy_port, socket, peer_name, buf_size),
 	outbound_key_check_(false), outbound_key_check_xor256_(false), 
 	inbound_jmpcall_check_(false), 
-	inbound_deny_re_(NULL), outbound_deny_re_(NULL),
+	inbound_pass_re_(NULL), inbound_deny_re_(NULL), 
+	outbound_pass_re_(NULL), outbound_deny_re_(NULL),
+	inbound_default_pass_(false), outbound_default_pass_(false),
 	dump_stream_(false)
 {
 
@@ -41,14 +43,34 @@ void BrucoSession::inbound_jmpcall_check(const bool &flag)
 	inbound_jmpcall_check_ = flag;
 }
 
+void BrucoSession::outbound_pass_re(RE2 *re)
+{
+	outbound_pass_re_ = re;
+}
+
 void BrucoSession::outbound_deny_re(RE2 *re)
 {
 	outbound_deny_re_ = re;
 }
 
+void BrucoSession::outbound_default_pass(const bool &flag)
+{
+	this->outbound_default_pass_ = flag;
+}
+
+void BrucoSession::inbound_pass_re(RE2 *re)
+{
+	inbound_pass_re_ = re;
+}
+
 void BrucoSession::inbound_deny_re(RE2 *re)
 {
 	inbound_deny_re_ = re;
+}
+
+void BrucoSession::inbound_default_pass(const bool &flag)
+{
+	this->inbound_default_pass_ = flag;
 }
 
 void BrucoSession::dump_stream(const bool &flag)
@@ -78,6 +100,14 @@ void BrucoSession::on_recv(const char *buf, int buf_size)
 		}
 	}
 
+	if (inbound_pass_re_ != NULL) {
+		bool rv = RE2::PartialMatch(target_str, *inbound_pass_re_);
+		if (rv) {
+			ProxySession::on_recv(buf, buf_size);
+			return;
+		}
+	}
+
 	if (inbound_deny_re_ != NULL) {
 		bool rv = RE2::PartialMatch(target_str, *inbound_deny_re_);
 		if (rv) {
@@ -87,8 +117,13 @@ void BrucoSession::on_recv(const char *buf, int buf_size)
 		}
 	}
 
-	// default : pass
-	ProxySession::on_recv(buf, buf_size);
+	// default policy 
+	if (inbound_default_pass_) {
+		ProxySession::on_recv(buf, buf_size);
+	}
+	else {
+		break_session();
+	}
 }
 
 void BrucoSession::on_recv_proxy(const char *buf, int buf_size)
@@ -96,16 +131,6 @@ void BrucoSession::on_recv_proxy(const char *buf, int buf_size)
 	std::string target_str(buf, buf_size);
 	if (dump_stream_) {
 		log_d("dump_stream : %s [out_bound] %s", peer_name_.c_str(), escape(target_str).c_str());
-	}
-
-	if (outbound_deny_re_ != NULL) {
-		bool rv = RE2::PartialMatch(target_str, *outbound_deny_re_);
-		if (rv) {
-			log_w("break_session : %s, type=outbound_deny_re, outbound_re=%s",
-				peer_name_.c_str(), outbound_deny_re_->pattern().c_str());
-			break_session();
-			return;
-		}
 	}
 
 	if (outbound_key_check_xor256_) {
@@ -127,8 +152,31 @@ void BrucoSession::on_recv_proxy(const char *buf, int buf_size)
 		}
 	}
 
-	// default : pass
-	ProxySession::on_recv_proxy(buf, buf_size);
+	if (outbound_pass_re_ != NULL) {
+		bool rv = RE2::PartialMatch(target_str, *outbound_pass_re_);
+		if (rv) {
+			ProxySession::on_recv_proxy(buf, buf_size);
+			return;
+		}
+	}
+
+	if (outbound_deny_re_ != NULL) {
+		bool rv = RE2::PartialMatch(target_str, *outbound_deny_re_);
+		if (rv) {
+			log_w("break_session : %s, type=outbound_deny_re, outbound_re=%s",
+				peer_name_.c_str(), outbound_deny_re_->pattern().c_str());
+			break_session();
+			return;
+		}
+	}
+
+	// default policy
+	if (outbound_default_pass_) {
+		ProxySession::on_recv_proxy(buf, buf_size);
+	}
+	else {
+		break_session();
+	}
 }
 
 std::string BrucoSession::read_key_()
