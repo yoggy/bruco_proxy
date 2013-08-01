@@ -34,8 +34,10 @@ usage : ./bruco_proxy config_file
 
 $ ./bruco_proxy sample_config.txt
 ==== startup bruco_proxy ====
-2013/06/16 20:01:53 [D] config_file=sample_config.txt, listen_port=12345, forward_host=::1, forward_port=80, max_client=100
-2013/06/16 20:01:53 [I] listen start...port=12345
+2013-08-01T12:25:37+0900 [I] ==== startup bruco_proxy ====
+2013-08-01T12:25:37+0900 [I] config_file=sample_config.txt, listen_port=12345, forward_host=::1, forward_port=80, max_client=100
+2013-08-01T11:25:37+0900 [I] listen start...port=12345
+
 </pre>
 
 config file
