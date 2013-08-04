@@ -11,8 +11,16 @@ forward_port  = 80
 
 max_client  = 100
 
+# udp log output
+udp_log_output_enable = true
+udp_log_output_host   = 127.0.0.1
+udp_log_output_port   = 58234
+
 # dump stream (true / false)
 dump_stream = true
+
+# nice() setting
+nice = 5
 
 # hash key check in outbound connection (true / false)
 outbound_key_check        = true
