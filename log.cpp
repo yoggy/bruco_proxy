@@ -21,9 +21,9 @@ void set_output_log_level(const int level)
 	output_log_level_ = level;
 }
 
-void set_output_string_length(const int length)
+void set_output_string_length(const int level)
 {
-	output_string_length_= length;
+	output_string_length_= level;
 }
 
 void start_udp_log_output(const char *host, const int &port)
@@ -96,8 +96,6 @@ void log_message_format_(const char *file, int line, const char *func, int level
 	}
 
 	char *msg = new char[output_string_length_];
-	memset(msg, 0, output_string_length_);
-
 	va_list args;
 	va_start(args, fmt);
 	vsnprintf(msg, output_string_length_, fmt, args);

@@ -11,7 +11,7 @@ extern "C" {
 #define LOGGING_LEVEL_DEBUG 0
 
 void set_output_log_level(const int level);
-void set_output_string_length(const int length);
+void set_output_string_length(const int level);
 
 void start_udp_log_output(const char *host, const int &port);
 void stop_udp_log_output();
