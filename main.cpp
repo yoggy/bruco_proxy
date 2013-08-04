@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "log.hpp"
 #include "config.hpp"
@@ -38,7 +39,9 @@ int main(int argc, char *argv[])
 	}
 
 	// logging settings
+	std::cerr << "output_log_level=" << cf->get_int("output_log_level") << std::endl;
 	set_output_log_level(cf->get_int("output_log_level"));
+	std::cerr << "output_string_length=" << cf->get_int("output_string_length") << std::endl;
 	set_output_string_length(cf->get_int("output_string_length"));
 	if (cf->get_bool("udp_log_output_enable")) {
 		start_udp_log_output(
