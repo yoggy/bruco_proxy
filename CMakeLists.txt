@@ -13,7 +13,7 @@ set(CMAKE_C_FLAGS "-g -Wall")
 
 include_directories(/usr/local/include)
 
-set(src_utils log.cpp config.cpp lock.cpp string.cpp udp.cpp tcp.cpp)
+set(src_utils log.cpp config.cpp lock.cpp string.cpp udp.cpp tcp.cpp time_utils.cpp)
 set(src_tcp  tcp_server.cpp tcp_session.cpp proxy_session.cpp)
 set(src_bruco_proxy main.cpp bruco_server.cpp bruco_session.cpp ${src_utils} ${src_tcp})
 

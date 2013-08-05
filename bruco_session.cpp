@@ -5,9 +5,21 @@
 
 #include "log.hpp"
 #include "string.hpp"
+#include "time_utils.hpp"
+
+Mutex BrucoSession::session_id_mutex_;
+
+long BrucoSession::get_session_id()
+{
+        ScopedLock lock(session_id_mutex_);
+        long session_id = get_tick_count() % 1000000000;
+
+        return session_id;
+}
 
 BrucoSession::BrucoSession(std::string &proxy_host, const int &proxy_port, const int &socket, const std::string &peer_name, const int &buf_size)
 	: ProxySession(proxy_host, proxy_port, socket, peer_name, buf_size),
+	session_id_(0),
 	outbound_key_check_(false), outbound_key_check_xor256_(false), 
 	inbound_jmpcall_check_(false), 
 	inbound_pass_re_(NULL), inbound_deny_re_(NULL), 
