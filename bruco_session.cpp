@@ -11,10 +11,10 @@ Mutex BrucoSession::session_id_mutex_;
 
 long BrucoSession::get_session_id()
 {
-        ScopedLock lock(session_id_mutex_);
-        long session_id = get_tick_count() % 1000000000;
+	ScopedLock lock(session_id_mutex_);
+	long session_id = get_tick_count() % 1000000000;
 
-        return session_id;
+	return session_id;
 }
 
 BrucoSession::BrucoSession(std::string &proxy_host, const int &proxy_port, const int &socket, const std::string &peer_name, const int &buf_size)
@@ -27,7 +27,7 @@ BrucoSession::BrucoSession(std::string &proxy_host, const int &proxy_port, const
 	inbound_default_pass_(false), outbound_default_pass_(false),
 	dump_stream_(false)
 {
-
+	session_id_ = get_session_id();
 }
 
 BrucoSession::~BrucoSession()
@@ -100,7 +100,7 @@ void BrucoSession::on_recv(const char *buf, int buf_size)
 	std::string target_str(buf, buf_size);
 
 	if (dump_stream_) {
-		log_d("dump_stream : %s [in_bound] %s", peer_name_.c_str(), escape(target_str).c_str());
+		log_d("dump_stream : session=%ld : [in_bound] %s", session_id_, escape(target_str).c_str());
 	}
 
 	if (inbound_jmpcall_check_) {
@@ -142,14 +142,14 @@ void BrucoSession::on_recv_proxy(const char *buf, int buf_size)
 {
 	std::string target_str(buf, buf_size);
 	if (dump_stream_) {
-		log_d("dump_stream : %s [out_bound] %s", peer_name_.c_str(), escape(target_str).c_str());
+		log_d("dump_stream : session=%ld : [out_bound] %s", session_id_, escape(target_str).c_str());
 	}
 
 	if (outbound_key_check_xor256_) {
 		std::string key = read_key_();
 		if (check_contain_key_xor256_(key, target_str)) {
 			log_w("break_session : %s, type=outbound_contain_key_xor256, outbound_key_file=%s",
-				peer_name_.c_str(), outbound_key_file_.c_str());
+					peer_name_.c_str(), outbound_key_file_.c_str());
 			break_session();
 			return;
 		}
@@ -158,7 +158,7 @@ void BrucoSession::on_recv_proxy(const char *buf, int buf_size)
 		std::string key = read_key_();
 		if (check_contain_key_(key, target_str)) {
 			log_w("break_session : %s, type=outbound_contain_key, outbound_key_file=%s",
-				peer_name_.c_str(), outbound_key_file_.c_str());
+					peer_name_.c_str(), outbound_key_file_.c_str());
 			break_session();
 			return;
 		}
@@ -176,7 +176,7 @@ void BrucoSession::on_recv_proxy(const char *buf, int buf_size)
 		bool rv = RE2::PartialMatch(target_str, *outbound_deny_re_);
 		if (rv) {
 			log_w("break_session : %s, type=outbound_deny_re, outbound_re=%s",
-				peer_name_.c_str(), outbound_deny_re_->pattern().c_str());
+					peer_name_.c_str(), outbound_deny_re_->pattern().c_str());
 			break_session();
 			return;
 		}
@@ -204,7 +204,7 @@ std::string BrucoSession::read_key_()
 
 	ss << ifs.rdbuf();
 	ifs.close();
-	
+
 	return ss.str();
 }
 
@@ -242,10 +242,10 @@ bool BrucoSession::check_jmpcall_(const std::string &src)
 		if (src[p] == (char)0xef) { 
 			if (p + 1 >= (int)src.size()) continue;
 			char jmpoffset = src[p+1];
-			
+
 			int callpos = p + jmpoffset + 2;
 			if (callpos < 0 || callpos >= (int)src.size()) continue;
-			
+
 			// call check
 			if (src[callpos] == (char)0xe8) {
 				return true;
