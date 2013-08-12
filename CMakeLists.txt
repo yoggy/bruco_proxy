@@ -11,6 +11,10 @@ find_library(RE2_LIBRARY
 set(CMAKE_CXX_FLAGS "-g -Wall")
 set(CMAKE_C_FLAGS "-g -Wall")
 
+if(APPLE)
+	add_definitions("-DMAC_OS_X")
+endif(APPLE)
+
 include_directories(/usr/local/include)
 
 set(src_utils log.cpp config.cpp lock.cpp string.cpp udp.cpp tcp.cpp time_utils.cpp)
